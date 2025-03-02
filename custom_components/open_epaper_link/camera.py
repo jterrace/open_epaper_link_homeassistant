@@ -15,7 +15,7 @@ import requests
 
 from .tag_types import TagType
 from .const import DOMAIN, SIGNAL_TAG_IMAGE_UPDATE
-from .image_decompressor import to_image
+from .image_decompressor import to_jpeg_bytes
 from .tag_types import get_hw_string, get_tag_types_manager
 from .util import get_image_path
 
@@ -190,7 +190,7 @@ class EPDCamera(Camera):
                         # Create decoder and process image in executor to avoid blocking
                         def process_image():
                             # Log first byte of raw data for debugging
-                            return to_image(raw_data, tag_def)
+                            return to_jpeg_bytes(raw_data, tag_def)
 
                         jpeg_data = await self.hass.async_add_executor_job(process_image)
 

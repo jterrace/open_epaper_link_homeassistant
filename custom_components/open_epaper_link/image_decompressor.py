@@ -144,8 +144,8 @@ def decode_g5(data: bytes, width: int, height: int) -> bytes:
 
     return bytes(output)
 
-def to_image(raw_data: bytes, tag_type: TagType) -> bytes:
-    """Convert decoded ESL raw data to JPEG image."""
+def to_image(raw_data: bytes, tag_type: TagType) -> Image:
+    """Convert decoded ESL raw data to Image."""
     data = decode_esl_raw(raw_data, tag_type)
 
     # For 90/270 degree rotated displays, swap width/height before processing
@@ -242,7 +242,11 @@ def to_image(raw_data: bytes, tag_type: TagType) -> bytes:
     elif tag_type.rotatebuffer == 3:  # 270 degrees CCW (90 CW)
         img = img.transpose(Image.Transpose.ROTATE_90)
 
-    # Convert to JPEG
+    return img
+
+def to_jpeg_bytes(raw_data: bytes, tag_type: TagType) -> bytes:
+    """Convert decoded ESL raw data to JPEG image."""
+    img = to_image(raw_data, tag_type)
     output = io.BytesIO()
     img.save(output, format='JPEG', quality=95)
     output.seek(0)
